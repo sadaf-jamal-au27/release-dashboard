@@ -1,0 +1,23 @@
+name: nightly-health
+
+on:
+  schedule:
+    - cron: "5 1 * * *" # daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: echo "In production: run smoke tests against dev/staging URLs."
+

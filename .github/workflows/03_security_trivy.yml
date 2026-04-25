@@ -1,0 +1,25 @@
+name: security-trivy
+
+on:
+  schedule:
+    - cron: "17 2 * * *" # daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fs-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy filesystem scan (high/critical)
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          scan-type: fs
+          ignore-unfixed: true
+          severity: "HIGH,CRITICAL"
+          format: "table"
+          exit-code: "0"
+

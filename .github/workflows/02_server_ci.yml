@@ -1,0 +1,42 @@
+name: server-ci
+
+on:
+  pull_request:
+    paths:
+      - "server/**"
+      - "package.json"
+      - "package-lock.json"
+      - "eslint.config.js"
+      - ".github/workflows/02_server_ci.yml"
+  push:
+    branches: [main, master]
+    paths:
+      - "server/**"
+      - "package.json"
+      - "package-lock.json"
+      - "eslint.config.js"
+      - ".github/workflows/02_server_ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: server-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint (includes server/)
+        run: npm run lint
+      - name: Node syntax check
+        run: node -c server/index.js
+

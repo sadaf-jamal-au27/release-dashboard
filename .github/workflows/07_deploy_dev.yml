@@ -1,0 +1,16 @@
+name: deploy-dev
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Deploying to DEV (placeholder)."
+

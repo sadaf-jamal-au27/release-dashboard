@@ -1,0 +1,24 @@
+name: release-prepare
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "semver bump"
+        required: true
+        type: choice
+        options: [patch, minor, major]
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compute next version (dry-run)
+        run: |
+          echo "Bump: ${{ inputs.bump }}"
+          echo "In production, this would create a tag + changelog PR."
+
